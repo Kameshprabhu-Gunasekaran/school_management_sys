@@ -2,10 +2,12 @@ package school_management_sys.service;
 
 import school_management_sys.dto.ResponseDTO;
 import school_management_sys.entity.Course;
+import school_management_sys.exception.BadRequestServiceAlertException;
 import school_management_sys.repository.CourseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import school_management_sys.util.Constant;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,14 +47,11 @@ public class CourseService {
             responseDTO.setMessage("Course retrieved successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(courseOptional.get());
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Course ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     @Transactional
@@ -75,14 +74,11 @@ public class CourseService {
             responseDTO.setMessage("Course updated successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(existingCourse);
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Course ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     public ResponseDTO deleteCourseById(Long id) {
@@ -93,13 +89,10 @@ public class CourseService {
             responseDTO.setMessage("Course deleted successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(null);
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Course ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 }

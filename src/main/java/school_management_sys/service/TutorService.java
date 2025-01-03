@@ -2,10 +2,12 @@ package school_management_sys.service;
 
 import school_management_sys.dto.ResponseDTO;
 import school_management_sys.entity.Tutor;
+import school_management_sys.exception.BadRequestServiceAlertException;
 import school_management_sys.repository.TutorRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import school_management_sys.util.Constant;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,13 +47,10 @@ public class TutorService {
             responseDTO.setMessage("Tutor retrieved successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(tutorOptional.get());
+            return responseDTO;
         } else {
-            responseDTO.setMessage("Tutor ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     @Transactional
@@ -78,13 +77,10 @@ public class TutorService {
             responseDTO.setMessage("Tutor updated successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(existingTutor);
+            return responseDTO;
         } else {
-            responseDTO.setMessage("Tutor ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+              throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     public ResponseDTO deleteTutorById(Long id) {
@@ -95,13 +91,11 @@ public class TutorService {
             responseDTO.setMessage("Tutor deleted successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(null);
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Tutor ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
 
-        return responseDTO;
     }
 }

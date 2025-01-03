@@ -2,10 +2,12 @@ package school_management_sys.service;
 
 import school_management_sys.dto.ResponseDTO;
 import school_management_sys.entity.Enrollment;
+import school_management_sys.exception.BadRequestServiceAlertException;
 import school_management_sys.repository.EnrollmentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import school_management_sys.util.Constant;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,14 +46,11 @@ public class EnrollmentService {
             responseDTO.setMessage("Enrollment retrieved successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(enrollmentOptional.get());
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Enrollment ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     @Transactional
@@ -73,14 +72,11 @@ public class EnrollmentService {
             responseDTO.setMessage("Enrollment updated successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(existingEnrollment);
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Enrollment ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     public ResponseDTO deleteEnrollmentById(Long id) {
@@ -91,12 +87,9 @@ public class EnrollmentService {
             responseDTO.setMessage("Enrollment deleted successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(null);
+            return responseDTO;
         } else {
-            responseDTO.setMessage("Enrollment ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 }

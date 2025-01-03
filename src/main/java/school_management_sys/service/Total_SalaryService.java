@@ -2,10 +2,13 @@ package school_management_sys.service;
 
 import school_management_sys.dto.ResponseDTO;
 import school_management_sys.entity.Total_Salary;
+import school_management_sys.exception.BadRequestServiceAlertException;
 import school_management_sys.repository.Total_SalaryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import school_management_sys.util.Constant;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -43,13 +46,10 @@ public class Total_SalaryService {
             responseDTO.setMessage("Total Salary retrieved successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(totalSalaryOptional.get());
+            return responseDTO;
         } else {
-            responseDTO.setMessage("Total Salary ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     @Transactional
@@ -71,14 +71,11 @@ public class Total_SalaryService {
             responseDTO.setMessage("Total Salary updated successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(existingTotalSalary);
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Total Salary ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 
     public ResponseDTO deleteTotalSalaryById(Long id) {
@@ -89,13 +86,10 @@ public class Total_SalaryService {
             responseDTO.setMessage("Total Salary deleted successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(null);
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("Total Salary ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 }

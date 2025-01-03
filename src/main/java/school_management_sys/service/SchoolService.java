@@ -2,10 +2,13 @@ package school_management_sys.service;
 
 import school_management_sys.dto.ResponseDTO;
 import school_management_sys.entity.School;
+import school_management_sys.exception.BadRequestServiceAlertException;
 import school_management_sys.repository.SchoolRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import school_management_sys.util.Constant;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -42,13 +45,11 @@ public class SchoolService {
             responseDTO.setMessage("School retrieved successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(school.get());
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("School ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-        return responseDTO;
     }
 
     @Transactional
@@ -75,14 +76,10 @@ public class SchoolService {
             responseDTO.setMessage("School updated successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(existingSchool);
+            return responseDTO;
+        }else {
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-        else {
-            responseDTO.setMessage("School ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
-        }
-
-        return responseDTO;
     }
 
     public ResponseDTO deleteSchoolById(Long id) {
@@ -93,13 +90,10 @@ public class SchoolService {
             responseDTO.setMessage("School deleted successfully");
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setData(null);
+            return responseDTO;
         }
         else {
-            responseDTO.setMessage("School ID " + id + " not found");
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-            responseDTO.setData(null);
+            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
-
-        return responseDTO;
     }
 }
