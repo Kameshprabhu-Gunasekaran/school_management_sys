@@ -18,4 +18,14 @@ public class GlobalExceptionHandler {
         responseDTO.setData(null);
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseDTO> handleSecurityException(Exception exception) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        exception.printStackTrace();
+        responseDTO.setMessage(exception.getMessage());
+        responseDTO.setStatusCode(400);
+        responseDTO.setData(null);
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }
