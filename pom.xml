@@ -11,7 +11,7 @@
 	<groupId>crud</groupId>
 	<artifactId>school_management_sys</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>school_management_sys</name>
+	<name>schoolmanagementsystem</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
