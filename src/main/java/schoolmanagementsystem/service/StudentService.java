@@ -92,4 +92,24 @@ public class StudentService {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
     }
+
+    public ResponseDTO getStudentsByCourseAndSchool(Long courseId, Long schoolId) {
+        Object students = studentRepository.findStudentsByCourseAndSchool(courseId, schoolId);
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        if (students.equals("null")) {
+            responseDTO.setMessage(Constant.ID_DOES_NOT_EXIST);
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+            responseDTO.setData(null);
+        } else {
+            responseDTO.setMessage(Constant.RETRIEVED);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            responseDTO.setData(students);
+        }
+
+        return responseDTO;
+    }
+
+
 }
+

@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,7 +18,7 @@ public class Enrollment {
     private Long id;
 
     @Column(name = "fees_paid", nullable = false)
-    private Boolean feesPaid;
+    private String feesPaid;
 
     @Column(name = "enrollment_status", nullable = false)
     private String enrollmentStatus;
@@ -38,11 +39,11 @@ public class Enrollment {
         this.id = id;
     }
 
-    public Boolean isFeesPaid() {
+    public String isFeesPaid() {
         return feesPaid;
     }
 
-    public void setFeesPaid(Boolean feesPaid) {
+    public void setFeesPaid(String feesPaid) {
         this.feesPaid = feesPaid;
     }
 
@@ -69,4 +70,11 @@ public class Enrollment {
     public void setCourse(Course course) {
         this.course = course;
     }
+
+//    @PrePersist
+//    public void prePersist() {
+//        if (this.enrollmentStatus == null) {
+//            this.enrollmentStatus = "Pending";
+//        }
+//    }
 }

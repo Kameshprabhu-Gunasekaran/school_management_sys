@@ -30,6 +30,7 @@ public class Student {
     @JoinColumn(name = "school_id")
     private School school;
 
+
     public Long getId() {
         return id;
     }

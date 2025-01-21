@@ -29,15 +29,6 @@ public class Salary {
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 
-    @PostConstruct
-    public void setValues(){
-        this.month = this.month == null ? this.month = 4L : this.month;
-    }
-
-    @PreDestroy
-    public void removeValues(){
-        this.month = 0L;
-    }
 
     public Long getId() {
         return id;

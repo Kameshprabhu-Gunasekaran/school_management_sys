@@ -46,4 +46,10 @@ public class StudentController {
     public ResponseDTO deleteById(@PathVariable("id") final Long id) {
         return this.studentService.remove(id);
     }
+
+    @GetMapping("/retrieve/course/{courseId}/school/{schoolId}")
+    public ResponseDTO getStudentsByCourseAndSchool(@PathVariable("courseId") Long courseId,
+                                                    @PathVariable("schoolId") Long schoolId) {
+        return studentService.getStudentsByCourseAndSchool(courseId, schoolId);
+    }
 }
