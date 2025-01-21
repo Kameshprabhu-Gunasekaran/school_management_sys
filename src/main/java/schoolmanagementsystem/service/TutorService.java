@@ -53,28 +53,28 @@ public class TutorService {
         final Tutor existingTutor = this.tutorRepository.findById(id)
                 .orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
 
-            if (tutor.getName() != null) {
-                existingTutor.setName(tutor.getName());
-            }
+        if (tutor.getName() != null) {
+            existingTutor.setName(tutor.getName());
+        }
 
-            if (tutor.getSubject() != null) {
-                existingTutor.setSubject(tutor.getSubject());
-            }
+        if (tutor.getSubject() != null) {
+            existingTutor.setSubject(tutor.getSubject());
+        }
 
-            if (tutor.getSalary() != 0) {
-                existingTutor.setSalary(tutor.getSalary());
-            }
+        if (tutor.getSalary() != 0) {
+            existingTutor.setSalary(tutor.getSalary());
+        }
 
-            if (tutor.getSchool() != null) {
-                existingTutor.setSchool(tutor.getSchool());
-            }
+        if (tutor.getSchool() != null) {
+            existingTutor.setSchool(tutor.getSchool());
+        }
 
-            this.tutorRepository.save(existingTutor);
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.UPDATED);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(existingTutor);
-            return responseDTO;
+        this.tutorRepository.save(existingTutor);
+        final ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setMessage(Constant.UPDATED);
+        responseDTO.setStatusCode(HttpStatus.OK.value());
+        responseDTO.setData(existingTutor);
+        return responseDTO;
 
     }
 

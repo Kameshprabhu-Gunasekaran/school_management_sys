@@ -54,14 +54,14 @@ public class SalaryService {
                 .orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
 
         if (salary.getMonth() != 0) {
-                existingSalary.setMonth(salary.getMonth());
-            }
-            if (salary.getSalaryPaid() != null) {
-                existingSalary.setSalaryPaid(salary.getSalaryPaid());
-            }
-            if(salary.getTutor() != null) {
-                existingSalary.setTutor(salary.getTutor());
-            }
+            existingSalary.setMonth(salary.getMonth());
+        }
+        if (salary.getSalaryPaid() != null) {
+            existingSalary.setSalaryPaid(salary.getSalaryPaid());
+        }
+        if (salary.getTutor() != null) {
+            existingSalary.setTutor(salary.getTutor());
+        }
 
         this.salaryRepository.save(existingSalary);
         final ResponseDTO responseDTO = new ResponseDTO();
