@@ -8,6 +8,14 @@ public class StudentCourseDTO {
     private String courseName;
     private String schoolName;
 
+    public StudentCourseDTO(String studentName, Long studentDob, String studentContact, String courseName, String schoolName) {
+        this.studentName = studentName;
+        this.studentDob = studentDob;
+        this.studentContact = studentContact;
+        this.courseName = courseName;
+        this.schoolName = schoolName;
+    }
+
     public String getStudentName() {
         return studentName;
     }
@@ -48,5 +56,3 @@ public class StudentCourseDTO {
         this.schoolName = schoolName;
     }
 }
-
-

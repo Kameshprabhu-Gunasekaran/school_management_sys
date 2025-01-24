@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import schoolmanagementsystem.dto.ResponseDTO;
+import schoolmanagementsystem.dto.StudentCourseDTO;
 import schoolmanagementsystem.entity.Student;
 import schoolmanagementsystem.exception.BadRequestServiceAlertException;
 import schoolmanagementsystem.repository.StudentRepository;
@@ -94,10 +95,10 @@ public class StudentService {
     }
 
     public ResponseDTO getStudentsByCourseAndSchool(Long courseId, Long schoolId) {
-        Object students = studentRepository.findStudentsByCourseAndSchool(courseId, schoolId);
-        ResponseDTO responseDTO = new ResponseDTO();
+        final List<StudentCourseDTO> students = this.studentRepository.findStudentsByCourseAndSchool(courseId, schoolId);
+        final ResponseDTO responseDTO = new ResponseDTO();
 
-        if (students.equals("null")) {
+        if (students == null) {
             responseDTO.setMessage(Constant.ID_DOES_NOT_EXIST);
             responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
             responseDTO.setData(null);

@@ -50,6 +50,6 @@ public class StudentController {
     @GetMapping("/retrieve/course/{courseId}/school/{schoolId}")
     public ResponseDTO getStudentsByCourseAndSchool(@PathVariable("courseId") Long courseId,
                                                     @PathVariable("schoolId") Long schoolId) {
-        return studentService.getStudentsByCourseAndSchool(courseId, schoolId);
+        return this.studentService.getStudentsByCourseAndSchool(courseId, schoolId);
     }
 }
