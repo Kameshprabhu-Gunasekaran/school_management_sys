@@ -5,6 +5,16 @@ public class ResponseDTO {
     private Object data;
     private String message;
 
+    public ResponseDTO() {
+
+    }
+
+    public ResponseDTO(int statusCode, Object data, String message) {
+        this.statusCode = statusCode;
+        this.data = data;
+        this.message = message;
+    }
+
     public Integer getStatusCode() {
         return statusCode;
     }

@@ -1,22 +1,33 @@
 package schoolmanagementsystem.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import schoolmanagementsystem.dto.PaginatedResponseDTO;
 import schoolmanagementsystem.dto.ResponseDTO;
+import schoolmanagementsystem.dto.SchoolDTO;
+import schoolmanagementsystem.dto.SearchRequestDTO;
 import schoolmanagementsystem.entity.School;
 import schoolmanagementsystem.exception.BadRequestServiceAlertException;
+import schoolmanagementsystem.mapper.SchoolMapper;
 import schoolmanagementsystem.repository.SchoolRepository;
 import schoolmanagementsystem.util.Constant;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SchoolService {
     private final SchoolRepository schoolRepository;
+    private final SchoolMapper schoolMapper;
 
-    public SchoolService(SchoolRepository schoolRepository) {
+    public SchoolService(SchoolRepository schoolRepository, SchoolMapper schoolMapper) {
         this.schoolRepository = schoolRepository;
+        this.schoolMapper = schoolMapper;
     }
 
     @Transactional
@@ -29,14 +40,61 @@ public class SchoolService {
         return responseDTO;
     }
 
-    public ResponseDTO retrieveAll() {
-        final List<School> schools = this.schoolRepository.findAll();
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVED);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(schools);
-        return responseDTO;
+    public PaginatedResponseDTO<SchoolDTO> searchSchools(SearchRequestDTO searchRequest) {
+        final Sort sort = searchRequest.getSortDir().equalsIgnoreCase("desc") ?
+                Sort.by(searchRequest.getSortBy()).descending() :
+                Sort.by(searchRequest.getSortBy()).ascending();
+
+        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize(), sort);
+
+        Page<School> schoolPage = schoolRepository.searchSchool(
+                searchRequest.getName(),
+                searchRequest.getAddress(),
+                searchRequest.getId(),
+                pageable
+        );
+
+        List<SchoolDTO> schoolDTOs = schoolPage.getContent().stream()
+                .map(school -> new SchoolDTO(school)) // Assuming you have a constructor in SchoolDTO
+                .collect(Collectors.toList());
+
+        PaginatedResponseDTO<SchoolDTO> response = new PaginatedResponseDTO<>();
+        response.setData(schoolDTOs);
+        response.setPageNumber(schoolPage.getNumber());
+        response.setPageSize(schoolPage.getSize());
+        response.setTotalElements(schoolPage.getTotalElements());
+        response.setTotalPages(schoolPage.getTotalPages());
+
+        return response;
     }
+
+
+//    public PaginatedResponseDTO<SchoolDTO> searchSchools(SearchRequestDTO searchRequest) {
+//        final Sort sort = searchRequest.getSortDir().equalsIgnoreCase("desc") ?
+//                Sort.by(searchRequest.getSortBy()).descending() :
+//                Sort.by(searchRequest.getSortBy()).ascending();
+//
+//        final Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize(), sort);
+//
+//        final Page<School> schoolPage = this.schoolRepository.searchSchool(
+//                searchRequest.getName(),
+//                searchRequest.getAddress(),
+//                searchRequest.getId(),
+//                pageable
+//        );
+//
+//      // final List<SchoolDTO> schoolDTOs = this.schoolMapper.toSchoolDTOList(schoolPage.getContent());
+//
+//        final PaginatedResponseDTO<SchoolDTO> response = new PaginatedResponseDTO<>();
+//        response.setData(null);
+//        response.setPageNumber(schoolPage.getNumber());
+//        response.setPageSize(schoolPage.getSize());
+//        response.setTotalElements(schoolPage.getTotalElements());
+//        response.setTotalPages(schoolPage.getTotalPages());
+//
+//        return response;
+//    }
+
 
     public ResponseDTO retrieveById(final Long id) {
         final School school = this.schoolRepository.findById(id)

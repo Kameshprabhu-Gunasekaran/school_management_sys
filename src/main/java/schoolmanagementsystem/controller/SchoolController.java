@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import schoolmanagementsystem.dto.PaginatedResponseDTO;
 import schoolmanagementsystem.dto.ResponseDTO;
+import schoolmanagementsystem.dto.SchoolDTO;
+import schoolmanagementsystem.dto.SearchRequestDTO;
 import schoolmanagementsystem.entity.School;
 import schoolmanagementsystem.service.SchoolService;
 
@@ -27,10 +30,11 @@ public class SchoolController {
         return this.schoolService.createSchool(school);
     }
 
-    @GetMapping("/retrieve")
-    public ResponseDTO retrieveAll() {
-        return this.schoolService.retrieveAll();
+    @GetMapping("/search")
+    public PaginatedResponseDTO<SchoolDTO> searchSchools(SearchRequestDTO searchRequest) {
+        return this.schoolService.searchSchools(searchRequest);
     }
+
 
     @GetMapping("/retrieve/{id}")
     public ResponseDTO retrieveById(@PathVariable("id") final Long id) {

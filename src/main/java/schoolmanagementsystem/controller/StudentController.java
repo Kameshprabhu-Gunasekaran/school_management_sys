@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import schoolmanagementsystem.dto.PaginatedResponseDTO;
 import schoolmanagementsystem.dto.ResponseDTO;
+import schoolmanagementsystem.dto.StudentDTO;
 import schoolmanagementsystem.entity.Student;
 import schoolmanagementsystem.service.StudentService;
 
@@ -23,13 +26,19 @@ public class StudentController {
     }
 
     @PostMapping("/create")
-    public ResponseDTO create(@RequestBody final Student student) {
-        return this.studentService.create(student);
+    public ResponseDTO create(@RequestBody final StudentDTO studentDTO) {
+        return this.studentService.create(studentDTO);
     }
 
     @GetMapping("/retrieve")
-    public ResponseDTO retrieveAll() {
-        return this.studentService.retrieveAll();
+    public PaginatedResponseDTO<Student> retrieveAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long dob) {
+        return this.studentService.retrieveAll(page, size, sortBy, sortDir, name, dob);
     }
 
     @GetMapping("/retrieve/{id}")
@@ -51,5 +60,10 @@ public class StudentController {
     public ResponseDTO getStudentsByCourseAndSchool(@PathVariable("courseId") Long courseId,
                                                     @PathVariable("schoolId") Long schoolId) {
         return this.studentService.getStudentsByCourseAndSchool(courseId, schoolId);
+    }
+
+    @GetMapping("/retrieve/students/{tutorId}")
+    public ResponseDTO getStudentsByTutorId(@PathVariable("tutorId") Long tutorId) {
+        return this.studentService.getStudentsByTutorId(tutorId);
     }
 }

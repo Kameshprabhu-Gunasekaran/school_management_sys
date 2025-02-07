@@ -1,41 +1,84 @@
 package schoolmanagementsystem.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import schoolmanagementsystem.dto.CourseDTO;
+import schoolmanagementsystem.dto.PaginatedResponseDTO;
 import schoolmanagementsystem.dto.ResponseDTO;
 import schoolmanagementsystem.entity.Course;
+import schoolmanagementsystem.entity.School;
+import schoolmanagementsystem.entity.Tutor;
 import schoolmanagementsystem.exception.BadRequestServiceAlertException;
+import schoolmanagementsystem.mapper.SchoolMapper;
 import schoolmanagementsystem.repository.CourseRepository;
+import schoolmanagementsystem.repository.SchoolRepository;
+import schoolmanagementsystem.repository.TutorRepository;
 import schoolmanagementsystem.util.Constant;
-
-import java.util.List;
 
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final SchoolRepository schoolRepository;
+    private final TutorRepository tutorRepository;
+    private final SchoolMapper schoolMapper;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, SchoolRepository schoolRepository, TutorRepository tutorRepository, SchoolMapper schoolMapper) {
         this.courseRepository = courseRepository;
+        this.schoolRepository = schoolRepository;
+        this.tutorRepository = tutorRepository;
+        this.schoolMapper = schoolMapper;
     }
 
     @Transactional
-    public ResponseDTO create(final Course course) {
+    public ResponseDTO create(final CourseDTO courseDTO) {
+        if (courseDTO.getName() == null || courseDTO.getName().isEmpty()) {
+            throw new BadRequestServiceAlertException("Course name is required");
+        }
+
+        final Course course = this.schoolMapper.toEntity(courseDTO);
+
+        if (course.getFees() == null) {
+            course.setFees(0L);
+        }
+
+        final Tutor tutor = this.tutorRepository.findById(Long.parseLong(courseDTO.getTutorId()))
+                .orElseThrow(() -> new BadRequestServiceAlertException(Constant.TUTOR_ID_NOT_FOUND));
+        course.setTutor(tutor);
+
+        final School school = this.schoolRepository.findById(Long.parseLong(courseDTO.getSchoolId()))
+                .orElseThrow(() -> new BadRequestServiceAlertException(Constant.SCHOOL_ID_NOT_FOUND));
+        course.setSchool(school);
+
         final Course savedCourse = this.courseRepository.save(course);
+
         final ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage(Constant.CREATED);
         responseDTO.setStatusCode(HttpStatus.CREATED.value());
         responseDTO.setData(savedCourse);
+
         return responseDTO;
     }
 
-    public ResponseDTO retrieveAll() {
-        final List<Course> courses = this.courseRepository.findAll();
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVED);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(courses);
-        return responseDTO;
+
+    public PaginatedResponseDTO<Course> retrieveAll(int page, int size, String sortBy, String sortDir, String name, Long id) {
+        final Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        final Pageable pageable = PageRequest.of(page, size, sort);
+
+        final Page<Course> coursePage = this.courseRepository.searchCourse(name, id, pageable);
+
+        final PaginatedResponseDTO<Course> response = new PaginatedResponseDTO<>();
+        response.setData(coursePage.getContent());
+        response.setPageNumber(coursePage.getNumber());
+        response.setPageSize(coursePage.getSize());
+        response.setTotalElements(coursePage.getTotalElements());
+        response.setTotalPages(coursePage.getTotalPages());
+
+        return response;
     }
 
     public ResponseDTO retrieveById(final Long id) {

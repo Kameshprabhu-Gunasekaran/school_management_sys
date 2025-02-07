@@ -18,7 +18,7 @@ public class School {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "address", nullable = false, unique = true)
+    @Column(name = "address", nullable = false)
     private String address;
 
     @Column(name = "contact_number", nullable = false, unique = true)
@@ -55,4 +55,5 @@ public class School {
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
+
 }

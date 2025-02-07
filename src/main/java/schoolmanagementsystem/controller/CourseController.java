@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import schoolmanagementsystem.dto.CourseDTO;
+import schoolmanagementsystem.dto.PaginatedResponseDTO;
 import schoolmanagementsystem.dto.ResponseDTO;
 import schoolmanagementsystem.entity.Course;
 import schoolmanagementsystem.service.CourseService;
@@ -23,13 +26,20 @@ public class CourseController {
     }
 
     @PostMapping("/create")
-    public ResponseDTO create(@RequestBody final Course course) {
-        return this.courseService.create(course);
+    public ResponseDTO create(@RequestBody final CourseDTO courseDTO) {
+        return this.courseService.create(courseDTO);
     }
 
     @GetMapping("/retrieve")
-    public ResponseDTO retrieveAll() {
-        return this.courseService.retrieveAll();
+    public PaginatedResponseDTO<Course> retrieveAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long id) {
+
+        return this.courseService.retrieveAll(page, size, sortBy, sortDir, name, id);
     }
 
     @GetMapping("/retrieve/{id}")

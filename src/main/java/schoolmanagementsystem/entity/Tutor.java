@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -24,10 +23,9 @@ public class Tutor {
     private String subject;
 
     @Column(name = "salary", nullable = false)
-    private Long salary;
+    private double salary;
 
     @ManyToOne
-    @JoinColumn(name = "School_id")
     private School school;
 
     public Long getId() {
@@ -54,11 +52,11 @@ public class Tutor {
         this.subject = subject;
     }
 
-    public Long getSalary() {
+    public double getSalary() {
         return salary;
     }
 
-    public void setSalary(Long salary) {
+    public void setSalary(double salary) {
         this.salary = salary;
     }
 

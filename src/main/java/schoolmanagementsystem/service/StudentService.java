@@ -1,13 +1,24 @@
 package schoolmanagementsystem.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import schoolmanagementsystem.dto.PaginatedResponseDTO;
 import schoolmanagementsystem.dto.ResponseDTO;
 import schoolmanagementsystem.dto.StudentCourseDTO;
+import schoolmanagementsystem.dto.StudentDTO;
+import schoolmanagementsystem.entity.School;
 import schoolmanagementsystem.entity.Student;
+import schoolmanagementsystem.entity.Tutor;
 import schoolmanagementsystem.exception.BadRequestServiceAlertException;
+import schoolmanagementsystem.mapper.SchoolMapper;
+import schoolmanagementsystem.repository.SchoolRepository;
 import schoolmanagementsystem.repository.StudentRepository;
+import schoolmanagementsystem.repository.TutorRepository;
 import schoolmanagementsystem.util.Constant;
 
 import java.util.List;
@@ -15,13 +26,33 @@ import java.util.List;
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final SchoolMapper schoolMapper;
+    private final TutorRepository tutorRepository;
+    private final SchoolRepository schoolRepository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, SchoolMapper schoolMapper, TutorRepository tutorRepository, SchoolRepository schoolRepository) {
         this.studentRepository = studentRepository;
+        this.schoolMapper = schoolMapper;
+        this.tutorRepository = tutorRepository;
+        this.schoolRepository = schoolRepository;
+
     }
 
+
     @Transactional
-    public ResponseDTO create(final Student student) {
+    public ResponseDTO create(final StudentDTO studentDTO) {
+        final Student student = this.schoolMapper.toEntity(studentDTO);
+
+        final Tutor tutor = this.tutorRepository.findById(Long.parseLong(studentDTO.getTutorId()))
+                .orElseThrow(() -> new BadRequestServiceAlertException(Constant.TUTOR_ID_NOT_FOUND));
+
+        student.setTutor(tutor);
+
+        final School school = this.schoolRepository.findById(Long.parseLong(studentDTO.getSchoolId()))
+                .orElseThrow(() -> new BadRequestServiceAlertException(Constant.SCHOOL_ID_NOT_FOUND));
+
+        student.setSchool(school);
+
         final Student savedStudent = this.studentRepository.save(student);
         final ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage(Constant.CREATED);
@@ -30,13 +61,20 @@ public class StudentService {
         return responseDTO;
     }
 
-    public ResponseDTO retrieveAll() {
-        final List<Student> students = this.studentRepository.findAll();
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVED);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(students);
-        return responseDTO;
+    public PaginatedResponseDTO<Student> retrieveAll(int page, int size, String sortBy, String sortDir, String name, Long dob) {
+        final Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        final Pageable pageable = PageRequest.of(page, size, sort);
+
+        final Page<Student> studentPage = this.studentRepository.searchStudent(name, dob, null, pageable);
+
+        final PaginatedResponseDTO<Student> response = new PaginatedResponseDTO<>();
+        response.setData(studentPage.getContent());
+        response.setPageNumber(studentPage.getNumber());
+        response.setPageSize(studentPage.getSize());
+        response.setTotalElements(studentPage.getTotalElements());
+        response.setTotalPages(studentPage.getTotalPages());
+
+        return response;
     }
 
     public ResponseDTO retrieveById(final Long id) {
@@ -111,6 +149,14 @@ public class StudentService {
         return responseDTO;
     }
 
+    public ResponseDTO getStudentsByTutorId(final Long tutorId) {
+        final List<Student> students = this.studentRepository.findStudentsByTutorId(tutorId);
 
+        final ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setMessage(Constant.RETRIEVED);
+        responseDTO.setStatusCode(HttpStatus.OK.value());
+        responseDTO.setData(students);
+
+        return responseDTO;
+    }
 }
-

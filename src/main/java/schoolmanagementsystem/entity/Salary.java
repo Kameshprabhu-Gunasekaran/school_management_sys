@@ -18,13 +18,13 @@ public class Salary {
     private Long id;
 
     @Column(name = "month", nullable = false)
-    private Long month;
+    private String month;
 
     @Column(name = "salary_paid", nullable = false)
     private Boolean salaryPaid;
 
     @ManyToOne
-    @JoinColumn(name = "tutor_id")
+    @JoinColumn(name = "tutor_id", nullable = false, referencedColumnName = "id")
     private Tutor tutor;
 
 
@@ -36,11 +36,11 @@ public class Salary {
         this.id = id;
     }
 
-    public Long getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(Long month) {
+    public void setMonth(String month) {
         this.month = month;
     }
 

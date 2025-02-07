@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -24,8 +23,10 @@ public class Course {
     private Long fees;
 
     @ManyToOne
-    @JoinColumn(name = "school_id", nullable = false, unique = true)
     private School school;
+
+    @ManyToOne
+    private Tutor tutor;
 
     public Long getId() {
         return id;
@@ -58,4 +59,20 @@ public class Course {
     public void setSchool(School school) {
         this.school = school;
     }
+
+    public Tutor getTutor() {
+        return tutor;
+    }
+
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
+
+//    public List<Enrollment> getEnrollments() {
+//        return enrollments;
+//    }
+//
+//    public void setEnrollments(List<Enrollment> enrollments) {
+//        this.enrollments = enrollments;
+//    }
 }

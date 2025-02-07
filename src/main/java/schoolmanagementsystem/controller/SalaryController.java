@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import schoolmanagementsystem.dto.PaginatedResponseDTO;
 import schoolmanagementsystem.dto.ResponseDTO;
 import schoolmanagementsystem.entity.Salary;
 import schoolmanagementsystem.service.SalaryService;
@@ -28,8 +30,13 @@ public class SalaryController {
     }
 
     @GetMapping("/retrieve")
-    public ResponseDTO retrieveAll() {
-        return this.salaryService.retrieveAll();
+    public PaginatedResponseDTO<Salary> retrieveAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        return this.salaryService.retrieveAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/retrieve/{id}")
