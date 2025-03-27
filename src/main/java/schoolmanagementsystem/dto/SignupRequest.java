@@ -1,24 +1,15 @@
 package schoolmanagementsystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import schoolmanagementsystem.util.Role;
 
 import java.util.List;
+import java.util.Set;
 
 public class SignupRequest {
     private String username;
+    private String email;
+    private Set<String> role;
     private String password;
-
-    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
-    private List<Role> role;
-
-    public SignupRequest() {}
-
-    public SignupRequest(String username, String password, List<Role> role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
 
     public String getUsername() {
         return username;
@@ -26,6 +17,14 @@ public class SignupRequest {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -36,7 +35,11 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public List<Role> getRole() {
-        return role;
+    public Set<String> getRole() {
+        return this.role;
+    }
+
+    public void setRole(Set<String> role) {
+        this.role = role;
     }
 }

@@ -1,16 +1,10 @@
 package schoolmanagementsystem.dto;
 
-public class AuthRequest {
+import java.util.Set;
+
+public class LoginRequest {
     private String username;
     private String password;
-
-    public AuthRequest() {
-    }
-
-    public AuthRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     public String getUsername() {
         return username;
