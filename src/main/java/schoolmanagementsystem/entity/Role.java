@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import schoolmanagementsystem.util.ERole;
 
 @Entity
 @Table(name = "roles")
@@ -19,13 +18,13 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private ERole name;
+    private schoolmanagementsystem.util.Role name;
 
     public Role() {
 
     }
 
-    public Role(ERole name) {
+    public Role(schoolmanagementsystem.util.Role name) {
         this.name = name;
     }
 
@@ -37,11 +36,11 @@ public class Role {
         this.id = id;
     }
 
-    public ERole getName() {
+    public schoolmanagementsystem.util.Role getName() {
         return name;
     }
 
-    public void setName(ERole name) {
+    public void setName(schoolmanagementsystem.util.Role name) {
         this.name = name;
     }
 }

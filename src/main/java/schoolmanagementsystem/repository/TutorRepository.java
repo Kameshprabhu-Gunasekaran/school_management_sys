@@ -13,7 +13,6 @@ public interface TutorRepository extends JpaRepository<Tutor, Long> {
 
     @Query("SELECT t FROM Tutor t WHERE " +
             "(:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
-            //  "(:subject IS NULL OR LOWER(t.subject) LIKE LOWER(CONCAT('%', :subject, '%'))) AND " +
             "(:id IS NULL OR t.id = :id)")
     Page<Tutor> searchTutor(@Param("name") String name,
                             @Param("subject") String subject,

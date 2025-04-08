@@ -144,15 +144,15 @@ public class EnrollmentService {
         final Enrollment enrollment = new Enrollment();
         enrollment.setStudent(student);
         enrollment.setCourse(course);
-        enrollment.setEnrollmentStatus("Enrolled");
-        enrollment.setFeesPaid("No");
+        enrollment.setEnrollmentStatus(Constant.ENROLLED);
+        enrollment.setFeesPaid(Constant.NO);
         this.enrollmentRepository.save(enrollment);
 
         if (incrementAmount > 0) {
             tutor.setSalary(tutor.getSalary() + incrementAmount);
             this.tutorRepository.save(tutor);
         } else {
-            throw new BadRequestServiceAlertException("Salary increment must be greater than zero");
+            throw new BadRequestServiceAlertException(Constant.SALARY_INCREMENT);
         }
 
         final ResponseDTO responseDTO = new ResponseDTO();

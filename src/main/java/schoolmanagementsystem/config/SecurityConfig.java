@@ -1,6 +1,5 @@
 package schoolmanagementsystem.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,25 +11,28 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import schoolmanagementsystem.security.AuthEntryPointJwt;
-import schoolmanagementsystem.security.AuthTokenFilter;
+import schoolmanagementsystem.security.AuthEntryPoint;
+import schoolmanagementsystem.security.DoFilter;
+import schoolmanagementsystem.security.JwtService;
 import schoolmanagementsystem.service.UserDetailsServiceImpl;
 
 @Configuration
-public class WebSecurityConfig {
+public class SecurityConfig {
 
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthEntryPoint unauthorizedHandler;
+    private final DoFilter authTokenFilter;
 
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
-
-    @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPoint unauthorizedHandler, DoFilter authTokenFilter) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.authTokenFilter = authTokenFilter;
     }
 
-
+    @Bean
+    public DoFilter authenticationJwtTokenFilter(JwtService jwtUtils) {
+        return new DoFilter(jwtUtils, userDetailsService);
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -52,7 +54,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -66,7 +67,7 @@ public class WebSecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
 
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

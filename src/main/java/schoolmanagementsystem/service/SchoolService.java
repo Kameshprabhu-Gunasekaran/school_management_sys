@@ -55,7 +55,7 @@ public class SchoolService {
         );
 
         List<SchoolDTO> schoolDTOs = schoolPage.getContent().stream()
-                .map(school -> new SchoolDTO(school)) // Assuming you have a constructor in SchoolDTO
+                .map(school -> new SchoolDTO(school))
                 .collect(Collectors.toList());
 
         PaginatedResponseDTO<SchoolDTO> response = new PaginatedResponseDTO<>();
@@ -67,34 +67,6 @@ public class SchoolService {
 
         return response;
     }
-
-
-//    public PaginatedResponseDTO<SchoolDTO> searchSchools(SearchRequestDTO searchRequest) {
-//        final Sort sort = searchRequest.getSortDir().equalsIgnoreCase("desc") ?
-//                Sort.by(searchRequest.getSortBy()).descending() :
-//                Sort.by(searchRequest.getSortBy()).ascending();
-//
-//        final Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize(), sort);
-//
-//        final Page<School> schoolPage = this.schoolRepository.searchSchool(
-//                searchRequest.getName(),
-//                searchRequest.getAddress(),
-//                searchRequest.getId(),
-//                pageable
-//        );
-//
-//      // final List<SchoolDTO> schoolDTOs = this.schoolMapper.toSchoolDTOList(schoolPage.getContent());
-//
-//        final PaginatedResponseDTO<SchoolDTO> response = new PaginatedResponseDTO<>();
-//        response.setData(null);
-//        response.setPageNumber(schoolPage.getNumber());
-//        response.setPageSize(schoolPage.getSize());
-//        response.setTotalElements(schoolPage.getTotalElements());
-//        response.setTotalPages(schoolPage.getTotalPages());
-//
-//        return response;
-//    }
-
 
     public ResponseDTO retrieveById(final Long id) {
         final School school = this.schoolRepository.findById(id)

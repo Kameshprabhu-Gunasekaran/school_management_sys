@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -23,11 +22,9 @@ public class Enrollment {
     private String enrollmentStatus;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
     public Long getId() {
@@ -70,10 +67,4 @@ public class Enrollment {
         this.course = course;
     }
 
-//    @PrePersist
-//    public void prePersist() {
-//        if (this.enrollmentStatus == null) {
-//            this.enrollmentStatus = "Pending";
-//        }
-//    }
 }

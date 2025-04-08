@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import schoolmanagementsystem.entity.User;
 import schoolmanagementsystem.repository.UserRepository;
+import schoolmanagementsystem.util.Constant;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -15,12 +16,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+        final User user = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(Constant.USERNAME_NOT_FOUND + username));
 
         return UserDetailsImpl.build(user);
     }
-
 }

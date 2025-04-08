@@ -27,11 +27,9 @@ public class Student {
     private String contactNumber;
 
     @ManyToOne
-    @JoinColumn(name = "school_id", nullable = false)
     private School school;
 
     @ManyToOne
-    @JoinColumn(name = "tutor_id", nullable = false)
     private Tutor tutor;
 
     public Long getId() {

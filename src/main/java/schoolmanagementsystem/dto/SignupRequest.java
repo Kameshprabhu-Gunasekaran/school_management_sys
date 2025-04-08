@@ -1,8 +1,5 @@
 package schoolmanagementsystem.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.util.List;
 import java.util.Set;
 
 public class SignupRequest {

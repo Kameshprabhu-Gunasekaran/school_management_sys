@@ -24,7 +24,6 @@ public class Salary {
     private Boolean salaryPaid;
 
     @ManyToOne
-    @JoinColumn(name = "tutor_id", nullable = false, referencedColumnName = "id")
     private Tutor tutor;
 
 

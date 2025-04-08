@@ -37,7 +37,7 @@ public class CourseService {
     @Transactional
     public ResponseDTO create(final CourseDTO courseDTO) {
         if (courseDTO.getName() == null || courseDTO.getName().isEmpty()) {
-            throw new BadRequestServiceAlertException("Course name is required");
+            throw new BadRequestServiceAlertException(Constant.COURSE_NAME_REQUIRED);
         }
 
         final Course course = this.schoolMapper.toEntity(courseDTO);

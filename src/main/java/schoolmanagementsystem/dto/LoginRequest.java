@@ -1,7 +1,5 @@
 package schoolmanagementsystem.dto;
 
-import java.util.Set;
-
 public class LoginRequest {
     private String username;
     private String password;

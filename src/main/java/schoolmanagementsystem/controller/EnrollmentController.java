@@ -1,6 +1,5 @@
 package schoolmanagementsystem.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,9 +22,11 @@ import schoolmanagementsystem.service.EnrollmentService;
 @RequestMapping("/api/v1/enrollment")
 public class EnrollmentController {
 
-    @Autowired
-    private EnrollmentService enrollmentService;
+    private final EnrollmentService enrollmentService;
 
+    public EnrollmentController(EnrollmentService enrollmentService) {
+        this.enrollmentService = enrollmentService;
+    }
 
     @PostMapping("/create")
     public ResponseDTO create(@RequestBody final EnrollmentDTO enrollmentDTO) {
@@ -61,7 +62,7 @@ public class EnrollmentController {
 
     @PostMapping("/enroll-and-increase-salary")
     public ResponseEntity<ResponseDTO> enrollStudentAndIncreaseTutorSalary(@RequestBody EnrollmentRequestDTO requestDTO) {
-        ResponseDTO response = enrollmentService.enrollStudentAndIncreaseTutorSalary(
+        final ResponseDTO response = this.enrollmentService.enrollStudentAndIncreaseTutorSalary(
                 requestDTO.getStudentId(),
                 requestDTO.getCourseId(),
                 requestDTO.getTutorId(),
