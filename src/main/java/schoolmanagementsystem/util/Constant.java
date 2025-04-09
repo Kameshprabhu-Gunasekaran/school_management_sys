@@ -1,7 +1,5 @@
 package schoolmanagementsystem.util;
 
-import java.security.PublicKey;
-
 public class Constant {
 
     private Constant() {
