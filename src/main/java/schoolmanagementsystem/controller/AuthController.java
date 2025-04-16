@@ -1,5 +1,6 @@
 package schoolmanagementsystem.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import schoolmanagementsystem.dto.JwtResponse;
 import schoolmanagementsystem.dto.LoginRequest;
 import schoolmanagementsystem.dto.MessageResponse;
+import schoolmanagementsystem.dto.ResponseDTO;
 import schoolmanagementsystem.dto.SignupRequest;
 import schoolmanagementsystem.entity.User;
 import schoolmanagementsystem.repository.RoleRepository;
@@ -102,7 +104,7 @@ public class AuthController {
                         roles.add(adminRole);
 
                         break;
-                    case "mod":
+                    case "moderator":
                         schoolmanagementsystem.entity.Role modRole = this.roleRepository.findByName(Role.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException(Constant.ROLE_NOT_FOUND));
                         roles.add(modRole);
@@ -115,10 +117,11 @@ public class AuthController {
                         roles.add(studentRole);
                         break;
 
-                    case "teacher":
-                        schoolmanagementsystem.entity.Role teacherRole = this.roleRepository.findByName(Role.ROLE_TEACHER)
+                    case "tutor":
+                        schoolmanagementsystem.entity.Role teacherRole = this.roleRepository.findByName(Role.ROLE_TUTOR)
                                 .orElseThrow(() -> new RuntimeException(Constant.ROLE_NOT_FOUND));
                         roles.add(teacherRole);
+                        break;
 
                     default:
                         schoolmanagementsystem.entity.Role userRole = this.roleRepository.findByName(Role.ROLE_USER)
@@ -131,6 +134,6 @@ public class AuthController {
         user.setRoles(roles);
         this.userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse(Constant.USER_REGISTERED));
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.CREATED.value(),user,Constant.USER_REGISTERED));
     }
 }

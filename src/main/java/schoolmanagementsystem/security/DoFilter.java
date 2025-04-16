@@ -42,6 +42,7 @@ public class DoFilter extends OncePerRequestFilter {
                 final String username = this.jwtUtils.getUserNameFromJwtToken(jwt);
 
                 final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                //logger.info("User Roles: " + userDetails.getAuthorities());
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,

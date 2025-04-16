@@ -131,4 +131,9 @@ public class TutorService {
         }
     }
 
+//    public boolean isOwner(Long tutorId, String name) {
+//        Tutor tutor = tutorRepository.findById(tutorId).orElse(null);
+//        return tutor != null && tutor.getName().equals(name);
+//    }
+
 }

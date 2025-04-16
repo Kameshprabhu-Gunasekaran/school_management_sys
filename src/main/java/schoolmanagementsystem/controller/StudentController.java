@@ -1,5 +1,7 @@
 package schoolmanagementsystem.controller;
 
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,11 +28,13 @@ public class StudentController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO create(@RequestBody final StudentDTO studentDTO) {
-        return this.studentService.create(studentDTO);
+        return studentService.create(studentDTO);
     }
 
     @GetMapping("/retrieve")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public PaginatedResponseDTO<Student> retrieveAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -42,27 +46,32 @@ public class StudentController {
     }
 
     @GetMapping("/retrieve/{id}")
+    @PostAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseDTO retrieveById(@PathVariable("id") final Long id) {
         return this.studentService.retrieveById(id);
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseDTO updateById(@PathVariable("id") final Long id, @RequestBody final Student student) {
         return this.studentService.updateById(id, student);
     }
 
     @DeleteMapping("/remove/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO deleteById(@PathVariable("id") final Long id) {
         return this.studentService.remove(id);
     }
 
     @GetMapping("/retrieve/course/{courseId}/school/{schoolId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseDTO getStudentsByCourseAndSchool(@PathVariable("courseId") Long courseId,
                                                     @PathVariable("schoolId") Long schoolId) {
         return this.studentService.getStudentsByCourseAndSchool(courseId, schoolId);
     }
 
     @GetMapping("/retrieve/students/{tutorId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseDTO getStudentsByTutorId(@PathVariable("tutorId") Long tutorId) {
         return this.studentService.getStudentsByTutorId(tutorId);
     }

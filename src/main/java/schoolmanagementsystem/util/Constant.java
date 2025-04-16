@@ -34,4 +34,5 @@ public class Constant {
     public static final String TOKEN_EXPIRED = "JWT token is expired: {}";
     public static final String TOKEN_UNSUPPORTED = "JWT token is unsupported: {}";
     public static final String JWT_CLAIMS_EMPTY = "JWT claims string is empty: {}";
+    public static final String UNAUTHORIZED_ERROR = "Unauthorized error: {}";
 }

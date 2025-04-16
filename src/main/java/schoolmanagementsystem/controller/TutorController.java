@@ -1,5 +1,7 @@
 package schoolmanagementsystem.controller;
 
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,11 +28,13 @@ public class TutorController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO create(@RequestBody final TutorDTO tutorDTO) {
         return this.tutorService.create(tutorDTO);
     }
 
     @GetMapping("/retrieve")
+    @PreAuthorize("hasRole('ADMIN')")
     public PaginatedResponseDTO<Tutor> retrieveAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -43,16 +47,19 @@ public class TutorController {
     }
 
     @GetMapping("/retrieve/{id}")
+    @PostAuthorize("hasRole('ADMIN') or returnObject.data.name == authentication.name")
     public ResponseDTO retrieveById(@PathVariable("id") final Long id) {
         return this.tutorService.retrieveById(id);
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isTutorOwner(#id)")
     public ResponseDTO updateById(@PathVariable("id") final Long id, @RequestBody final Tutor tutor) {
         return this.tutorService.updateById(id, tutor);
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO deleteById(@PathVariable("id") final Long id) {
         return this.tutorService.remove(id);
     }

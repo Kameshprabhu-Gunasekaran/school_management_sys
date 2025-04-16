@@ -159,4 +159,9 @@ public class StudentService {
 
         return responseDTO;
     }
+
+//    public boolean isOwner(Long studentId, String name) {
+//        Student student = studentRepository.findById(studentId).orElse(null);
+//        return student != null && student.getName().equals(name);
+//    }
 }
